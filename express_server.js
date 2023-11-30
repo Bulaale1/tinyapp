@@ -39,24 +39,48 @@ app.get("/hello", (req, res) => {
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
+//Myurls
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
+  // console.log('something to test',templateVars);
   res.render("urls_index", templateVars);
 });
-
+//get function for updating the lings.
 app.get("/urls/:id", (req, res) => {
-  const templateVars = { id: req.params.id, longURL:urlDatabase.id /* What goes here? */ };
+  const id = req.params.id;
+  const templateVars = { id:id,
+    longURL:urlDatabase[id]/* What goes here? */ };
   res.render("urls_show", templateVars);
 });
-app.post('/submit', (req, res) => {
-  //to double check if it perfectly working;
-  const formsubmit = req.body.longURL;
-  urlDatabase[uniqueID] = formsubmit;
+// this is the begining of update function;
+// app.get('/urls/:id', (req, res) => {
+//   const id = req.params.id;
+//   const templateVars = {
+//     id:id,
+//     link:urlDatabase[id]
+//   };
+//   res.render("urls_show",templateVars);
+// });
+app.post("/urls/:id",(req, res) => {
+  const idToUpdate = req.params.id;
+  urlDatabase[idToUpdate] = req.body.newURL;
+  res.redirect('/urls');
 });
+//he end of update function
+// app.post('/submit', (req, res) => {
+//   console.log(req.body);
+//   const formsubmit = req.body.longURL;
+//   urlDatabase[uniqueID] = formsubmit;
+// });
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  console.log('the submited link');
+  const id = generateRandomString(6);
+  urlDatabase[id] = req.body.longURL;
+  console.log(urlDatabase);
+  
+  res.redirect("/urls");
 });
+//Delete function
 app.post("/urls/:id/delete",(req,res)=>{
   console.log('just testing my delete function');
   const idToDelete = req.params.id;
